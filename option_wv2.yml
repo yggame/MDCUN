@@ -1,0 +1,65 @@
+#
+# @Author: yanggang
+#
+
+name: pan_unfolding
+algorithm: pan_unfolding_v4
+nEpochs: 1000
+gpu_mode: True
+save_best: True
+gpus: [0]
+threads: 8
+stage: 6
+
+in_channels: 5
+middle_channels: 8
+out_channels: 4
+n_resblocks: 2
+res_scale: 1
+
+seed: 123
+checkpoint: /home/yanggang/code/PAN_unfloding/checkpoint_gppnn_WV2
+data_dir_train: /home/z/DataStorage/YangGang_dataset/PAN_sharpen_dataset/WV2_data/train128
+data_dir_eval: /home/z/DataStorage/YangGang_dataset/PAN_sharpen_dataset/WV2_data/test128
+source_ms: ms
+source_pan: pan
+
+pretrain:
+  pretrained: False
+  pre_sr: 1592134968/best.pth
+  pre_folder: /home/yanggang/code/PAN_unfloding/checkpoint_gppnn_WV2
+
+test:
+  algorithm: gppnn
+  type: test #[test, eval]
+  data_dir: /home/z/DataStorage/YangGang_dataset/PAN_sharpen_dataset/WV2_data/test128
+  source_ms: ms
+  source_pan: pan
+  model: pan_unfolding_v4_4_1634800468_6stage/best.pth
+  save_dir: /home/yanggang/code/PAN_unfloding/results/gppnn_WV2
+
+data:
+  upsacle:  4
+  batch_size: 4
+  patch_size: 32
+  data_augmentation: False
+  n_colors: 4
+  rgb_range: 255
+  normalize : False
+
+schedule:
+  lr: 5e-4
+  decay: 20
+  gamma: 0.5
+  optimizer: ADAM #[ADAM, SGD, RMSprop]
+  momentum: 0.9 #SGD momentum
+  beta1: 0.9 #ADAM beta
+  beta2: 0.999 #ADAM beta
+  epsilon: 1e-8 #ADAM epsilon
+  alpha: 0.9 #RMSprop alpha
+  weight_dency: 0
+  gclip: 0.04
+  loss: L1 #[MSE, L1]
+  use_YCbCr: False
+
+
